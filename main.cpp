@@ -15,7 +15,7 @@ Player player(0, 0, 0, 0, 0);
 vector<Enemy> enemies;
 vector<Laser> firedLaser;
 float frameIndex = 1;
-float levelEnemies = 30;
+float levelEnemies = 10;
 
 
 void setup()
@@ -23,7 +23,7 @@ void setup()
     player = Player(GetScreenWidth() / 2, GetScreenHeight() - GetScreenHeight() / 4, 200, 32, 32);
     for(float i = 0; i <= levelEnemies; i++)
     {
-        enemies.push_back(Enemy(rand() % 800, rand() % 200, 300, 32, 32));
+        enemies.push_back(Enemy(rand() % 800, rand() % 200, 100, 32, 32));
     }
 }
 
@@ -61,7 +61,7 @@ int main(void)
     setup();                        // Setup game variables
 
     // Main game loop
-    while (!WindowShouldClose)    // Detect window close button or ESC key
+    while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         //Controls
         if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
@@ -102,9 +102,10 @@ int main(void)
             {
                 enemies[i].y += enemies[i].speed * GetFrameTime();
             }
-            else if (enemies[i].y >= 450)
+            
+            if (enemies[i].y >= 600)
             {
-                checkToEraseEnemy(i);
+                enemies[i].y = 10; 
                 //cout << "delete\n";               
             }
             cout << enemies[i].y << endl;
