@@ -28,6 +28,6 @@ class Enemy
             //cout << y << endl; //Uncomment this to debug y
             
             
-            DrawRectangleRec(getRect(), WHITE);
+            DrawRectangleRec(getRect(), BLUE);
         }
 };
