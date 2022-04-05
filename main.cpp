@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
@@ -16,12 +15,16 @@ Player player(0, 0, 0, 0, 0);
 vector<Enemy> enemies;
 vector<Laser> firedLaser;
 float frameIndex = 1;
-
+float levelEnemies = 30;
 
 
 void setup()
 {
     player = Player(GetScreenWidth() / 2, GetScreenHeight() - GetScreenHeight() / 4, 200, 32, 32);
+    for(float i = 0; i <= levelEnemies; i++)
+    {
+        enemies.push_back(Enemy(rand() % 800, 10, 300, 32, 32));
+    }
 }
 
 void checkToEraseLaser(int point)
@@ -92,13 +95,6 @@ int main(void)
         frameIndex += 1;
         //cout << frameIndex << endl;
         //cout << enemies.size() << endl;
-
-        /*if(frameIndex == GetFPS() / 2)
-        {
-            enemies.push_back(Enemy(rand()%800, 10, 200, 32, 32));
-            //cout << "pushed pabk \n";
-            frameIndex = 0;
-        }*/
 
         for(unsigned long long int i=0; i < enemies.size(); i++)
         {
