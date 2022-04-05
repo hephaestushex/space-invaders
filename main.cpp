@@ -16,6 +16,7 @@ vector<Enemy> enemies;
 vector<Laser> firedLaser;
 float frameIndex = 1;
 float levelEnemies = 10;
+float levelLasers = 20;
 
 
 void setup()
@@ -73,10 +74,7 @@ int main(void)
             player.x += player.speed * GetFrameTime();
         }
 
-        if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP))
-        {
-            firedLaser.push_back(Laser(player.x, player.y - 32, 300, 8));
-        }
+        
         
         //Logic
 
