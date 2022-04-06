@@ -12,38 +12,33 @@ using namespace std;
 bool gameOver = false;
 
 Player player(0, 0, 0, 0, 0);
+
 vector<Enemy> enemies;
 vector<Laser> firedLaser;
+
 float frameIndex = 1;
 float levelEnemies = 10;
 float levelLasers = 20;
 
+int i = 0;
 
 void setup()
 {
-    player = Player(GetScreenWidth() / 2, GetScreenHeight() - GetScreenHeight() / 4, 200, 32, 32);
-    for(float i = 0; i <= levelEnemies; i++)
+    for (i = 0; i <= levelEnemies; i++)
     {
-        enemies.push_back(Enemy(rand() % 800, rand() % 200, 100, 32, 32));
+        enemies.push_back(Enemy(rand() % 800, rand() % 50, rand() % 100, 32, 32));
+    }
+
+    for (i = 0; i <= levelLasers; i++)
+    {
+        firedLaser.push_back(Laser(0, 0, 0, 0));
     }
 }
 
-void checkToEraseLaser(int point)
+void eraseLaser(int point)
 {
-    if (firedLaser[point].y <= 0 )
-    {
-        firedLaser.erase(firedLaser.begin() + point);
-        checkToEraseLaser(point);
-    } 
-}
-
-void checkToEraseEnemy(int point)
-{
-    if (enemies[point].y >= 450)
-    {
-        enemies.erase(enemies.begin() + point);
-        checkToEraseEnemy(point);
-    } 
+    firedLaser.erase(firedLaser.begin() + point);
+    eraseLaser(point);
 }
 
 int main(void)
@@ -60,6 +55,7 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     setup();                        // Setup game variables
+    player = Player(GetScreenWidth() / 2, GetScreenHeight() - GetScreenHeight() / 4, 200, 32, 32);
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -78,22 +74,26 @@ int main(void)
         
         //Logic
 
+        frameIndex++;
+
         for(unsigned long long int i=0; i < firedLaser.size(); i++)
         {
             if (firedLaser[i].y > 0 )
             {
                 firedLaser[i].y -= firedLaser[i].speed * GetFrameTime();
             }
-            else if (firedLaser[i].y <= 0)
+            else if (firedLaser[i].y < 0)
             {
                 firedLaser[i].y = player.y;
                 firedLaser[i].x = player.x;
             }
-        }
 
-        frameIndex += 1;
-        //cout << frameIndex << endl;
-        //cout << enemies.size() << endl;
+            if (frameIndex == 10 && firedLaser[i].speed == 0)
+            {
+                firedLaser[i] = Laser(player.x, player.y - 16, 300, 8);
+                frameIndex = 0;
+            }
+        }
 
         for(unsigned long long int i=0; i < enemies.size(); i++)
         {
@@ -104,12 +104,41 @@ int main(void)
             
             if (enemies[i].y >= 600)
             {
-                enemies[i].y = 10; 
-                //cout << "delete\n";               
+                enemies[i].y = 10;               
             }
-            cout << enemies[i].y << endl;
+        }
+
+        //Collision Detecting Loops
+
+        for (unsigned long long int i=0; i < firedLaser.size(); i++)
+        {
+            for (unsigned long long int i=0; i < enemies.size(); i++)
+            {
+                if (CheckCollisionCircleRec(Vector2{firedLaser[i].x, firedLaser[i].y}, firedLaser[i].radius, enemies[i].getRect()))
+                {
+                    firedLaser[i].x = player.x;
+                    firedLaser[i].y = player.y;
+                }
+            }
+        }
+
+        for (unsigned long long int i=0; i < enemies.size(); i++)
+        {
+            for (unsigned long long int i=0; i < firedLaser.size(); i++)
+            {
+                if (CheckCollisionCircleRec(Vector2{firedLaser[i].x, firedLaser[i].y}, firedLaser[i].radius, enemies[i].getRect()))
+                {
+                    enemies.erase(enemies.begin() + i);
+                }
+            }
+
+            if (CheckCollisionRecs(player.getRect(), enemies[i].getRect()))
+            {
+                gameOver = true;
+            }
 
         }
+
 
         // Draw
         //----------------------------------------------------------------------------------
