@@ -86,7 +86,8 @@ int main(void)
             }
             else if (firedLaser[i].y <= 0)
             {
-                checkToEraseLaser(i);                
+                firedLaser[i].y = player.y;
+                firedLaser[i].x = player.x;
             }
         }
 
