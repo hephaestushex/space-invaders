@@ -132,9 +132,6 @@ int main(void)
                 }
             }
 
-            if (CheckCollisionRecs(player.getRect(), enemies[i].getRect()))
-            {
-                gameOver = true;
             }
 
         }
