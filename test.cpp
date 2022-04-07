@@ -25,7 +25,7 @@ int main(void)
         {
         	cout << "Success\n";
         }
-        cout << randomNumber << "\n";
+        cout << randomNumber << endl;
     }
  	cout << "End";
     return 0;

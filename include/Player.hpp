@@ -1,6 +1,7 @@
 #include <iostream>
 #include "raylib.h"
 
+int hello = 3500;
 class Player
 {
 	public:

@@ -10,6 +10,7 @@
 using namespace std;
 
 bool gameOver = false;
+bool enemyKilled = false;
 
 Player player(0, 0, 0, 0, 0);
 
@@ -20,13 +21,15 @@ float frameIndex = 1;
 float levelEnemies = 10;
 float levelLasers = 20;
 
+unsigned long long int aliasI = 0;
+
 int i = 0;
 
 void setup()
 {
     for (i = 0; i <= levelEnemies; i++)
     {
-        enemies.push_back(Enemy(rand() % 800, rand() % 50, rand() % 100, 32, 32));
+        enemies.push_back(Enemy(rand() % 800, rand() % 50, rand() % 100, 32, 32, 0));
     }
 
     for (i = 0; i <= levelLasers; i++)
@@ -76,8 +79,28 @@ int main(void)
 
         frameIndex++;
 
+        for(unsigned long long int i=0; i < enemies.size(); i++)
+        {
+            
+            aliasI = i;
+            
+            if (enemies[i].y > 0 )
+            {
+                enemies[i].y += enemies[i].speed * GetFrameTime();
+            }
+            
+            if (enemies[i].y >= 600)
+            {
+                enemies[i].y = 10;               
+            }
+        }
+
+
+        
         for(unsigned long long int i=0; i < firedLaser.size(); i++)
         {
+            aliasI = i;
+            
             if (firedLaser[i].y > 0 )
             {
                 firedLaser[i].y -= firedLaser[i].speed * GetFrameTime();
@@ -94,49 +117,7 @@ int main(void)
                 frameIndex = 0;
             }
         }
-
-        for(unsigned long long int i=0; i < enemies.size(); i++)
-        {
-            if (enemies[i].y > 0 )
-            {
-                enemies[i].y += enemies[i].speed * GetFrameTime();
-            }
-            
-            if (enemies[i].y >= 600)
-            {
-                enemies[i].y = 10;               
-            }
-        }
-
-        //Collision Detecting Loops
-
-        for (unsigned long long int i=0; i < firedLaser.size(); i++)
-        {
-            for (unsigned long long int i=0; i < enemies.size(); i++)
-            {
-                if (CheckCollisionCircleRec(Vector2{firedLaser[i].x, firedLaser[i].y}, firedLaser[i].radius, enemies[i].getRect()))
-                {
-                    firedLaser[i].x = player.x;
-                    firedLaser[i].y = player.y;
-                }
-            }
-        }
-
-        for (unsigned long long int i=0; i < enemies.size(); i++)
-        {
-            for (unsigned long long int i=0; i < firedLaser.size(); i++)
-            {
-                if (CheckCollisionCircleRec(Vector2{firedLaser[i].x, firedLaser[i].y}, firedLaser[i].radius, enemies[i].getRect()))
-                {
-                    enemies.erase(enemies.begin() + i);
-                }
-            }
-
-            }
-
-        }
-
-
+        
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -162,7 +143,7 @@ int main(void)
 
             for(unsigned long long int i=0; i < enemies.size(); i++)
             {
-                if (enemies[i].y > 10)
+                if (enemies[i].y > 10 && enemies[i].hit == 0)
                 {
                     enemies[i].draw();
                 }
