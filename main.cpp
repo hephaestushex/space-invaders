@@ -79,43 +79,11 @@ int main(void)
 
         frameIndex++;
 
-        for(unsigned long long int i=0; i < enemies.size(); i++)
-        {
-            
-            aliasI = i;
-            
-            if (enemies[i].y > 0 )
-            {
-                enemies[i].y += enemies[i].speed * GetFrameTime();
-            }
-            
-            if (enemies[i].y >= 600)
-            {
-                enemies[i].y = 10;               
-            }
-        }
-
-
-        
         for(unsigned long long int i=0; i < firedLaser.size(); i++)
         {
             aliasI = i;
             
-            if (firedLaser[i].y > 0 )
-            {
-                firedLaser[i].y -= firedLaser[i].speed * GetFrameTime();
-            }
-            else if (firedLaser[i].y < 0)
-            {
-                firedLaser[i].y = player.y;
-                firedLaser[i].x = player.x;
-            }
-
-            if (frameIndex == 10 && firedLaser[i].speed == 0)
-            {
-                firedLaser[i] = Laser(player.x, player.y - 16, 300, 8);
-                frameIndex = 0;
-            }
+            
         }
         
         // Draw
@@ -135,6 +103,22 @@ int main(void)
 
             for(unsigned long long int i=0; i < firedLaser.size(); i++)
             {
+                if (firedLaser[i].y > 0 )
+                {
+                    firedLaser[i].y -= firedLaser[i].speed * GetFrameTime();
+                }
+                else if (firedLaser[i].y < 0)
+                {
+                    firedLaser[i].y = player.y;
+                    firedLaser[i].x = player.x;
+                }
+
+                if (frameIndex == 10 && firedLaser[i].speed == 0)
+                {
+                    firedLaser[i] = Laser(player.x, player.y - 16, 300, 8);
+                    frameIndex = 0;
+                }
+                
                 if (firedLaser[i].y > 0)
                 {
                     firedLaser[i].draw();
@@ -143,7 +127,17 @@ int main(void)
 
             for(unsigned long long int i=0; i < enemies.size(); i++)
             {
-                if (enemies[i].y > 10 && enemies[i].hit == 0)
+                if (enemies[i].y > 0 )
+                {
+                    enemies[i].y += enemies[i].speed * GetFrameTime();
+                }
+                
+                if (enemies[i].y >= 600)
+                {
+                    enemies[i].y = 0;               
+                }
+                
+                if (enemies[i].y > 0 && enemies[i].hit == 0)
                 {
                     enemies[i].draw();
                 }
