@@ -86,6 +86,18 @@ int main(void)
 
         waveCleared = true;
 
+        for (int i=0; i < levelEnemies; i++)
+        {
+            if (CheckCollisionCircleRec(laser.center, laser.radius, enemies[i].getRect()))
+            {
+                enemies[i].hit = 1;
+                enemies[i].y = 10;
+                cout << "ouch for enemy number " << i << "\n";
+            }
+        }
+
+        //cout << laser.x << " "<< laser.y << "\n";
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -137,16 +149,10 @@ int main(void)
                 enemies[i].y = 10;
             }
 
-            if (CheckCollisionCircleRec(laser.center, laser.radius, enemies[i].getRect()))
-            {
-                enemies[i].hit = 1;
-                enemies[i].y = 10;
-                cout << "ouch for enemy number " << i << "\n";
-            }
-
             if (CheckCollisionRecs(player.getRect(), enemies[i].getRect()))
             {
                 gameOver = true;
+                cout << "gameOver\n";
             }
 
             if (levelUp == 1)
