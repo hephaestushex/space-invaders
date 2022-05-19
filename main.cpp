@@ -10,7 +10,7 @@
 using namespace std;
 
 bool gameOver = false;
-bool enemyKilled = false;
+bool waveCleared = false;
 
 Player player(0, 0, 0, 0, 0);
 
@@ -18,7 +18,7 @@ vector<Enemy> enemies;
 vector<Laser> firedLaser;
 
 float frameIndex = 1;
-float levelEnemies = 10;
+float levelEnemies = 20;
 float levelLasers = 20;
 
 unsigned long long int aliasI = 0;
@@ -78,13 +78,6 @@ int main(void)
         //Logic
 
         frameIndex++;
-
-        for(unsigned long long int i=0; i < firedLaser.size(); i++)
-        {
-            aliasI = i;
-            
-            
-        }
         
         // Draw
         //----------------------------------------------------------------------------------
@@ -118,7 +111,7 @@ int main(void)
                     firedLaser[i] = Laser(player.x, player.y - 16, 300, 8);
                     frameIndex = 0;
                 }
-                
+
                 if (firedLaser[i].y > 0)
                 {
                     firedLaser[i].draw();
@@ -132,14 +125,30 @@ int main(void)
                     enemies[i].y += enemies[i].speed * GetFrameTime();
                 }
                 
-                if (enemies[i].y >= 600)
+                if (enemies[i].y > 600)
                 {
-                    enemies[i].y = 0;               
+                    enemies[i].y = 10;               
                 }
                 
                 if (enemies[i].y > 0 && enemies[i].hit == 0)
                 {
                     enemies[i].draw();
+                }
+            }
+
+            for (unsigned long long int x=0; x < levelLasers; x++)
+            {
+                for (unsigned long long int y=0; y < levelLasers; y++)
+                {
+                    if (CheckCollisionCircleRec(firedLaser[y].center, firedLaser[y].radius, enemies[x].getRect()))
+                    {
+                        enemies[i].hit = 1;
+                    }
+
+                    if (CheckCollisionRecs(player.getRect(), enemies[x].getRect()))
+                    {
+                        gameOver = true;
+                    }
                 }
             }  
         EndDrawing();

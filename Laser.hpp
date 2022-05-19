@@ -7,7 +7,7 @@ class Laser
         float x, y, speed, radius;
         bool e, isFired;
 
-        
+        Vector2 center = {x, y};
 
 	    Laser(float pX, float pY, float pSpeed, float pRadius)
 	    {
