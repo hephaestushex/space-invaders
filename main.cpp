@@ -64,6 +64,7 @@ int main(void)
         {
             laser.x = player.x;
             laser.y = player.y;
+            laser.isFired = true;
         }
 
         // Logic
@@ -79,6 +80,7 @@ int main(void)
             {
                 levelEnemies = level * 10 * 2;
                 levelUp = 1;
+                cout << "LEvel UP\n";
             }
         }
 
@@ -100,14 +102,22 @@ int main(void)
 
         player.draw();
 
-        if (laser.y > 0)
+        if (laser.y > 0 && laser.isFired == true)
         {
             laser.y -= laser.speed * GetFrameTime();
         }
+
+        else if (laser.y > 0) 
+        {
+            laser.x = player.x;
+            laser.y = player.y;
+        }
+        
         else if (laser.y < 0)
         {
             laser.y = player.y;
             laser.x = player.x;
+            laser.isFired = false;
         }
 
         if (laser.y > 0)
