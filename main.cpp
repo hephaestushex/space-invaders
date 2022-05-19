@@ -13,7 +13,7 @@ bool gameOver = false;
 bool waveCleared = false;
 
 Player player(0, 0, 0, 0, 0);
-Laser laser(0, 0, 0, 0, 0, );
+Laser laser(0, 0, 0, 0);
 
 vector<Enemy> enemies;
 
@@ -100,7 +100,7 @@ int main(void)
         }
 
         player.draw();
-        
+
         if (laser.y > 0)
         {
             laser.y -= laser.speed * GetFrameTime();
