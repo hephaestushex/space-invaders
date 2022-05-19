@@ -20,29 +20,27 @@ vector<Laser> firedLaser;
 float frameIndex = 1;
 float levelEnemies = 20;
 float levelLasers = 20;
-
-unsigned long long int aliasI = 0;
-
-int i = 0;
+float level = 1;
+float levelUp = 0;
 
 void setup()
 {
-    for (i = 0; i <= levelEnemies; i++)
+    for (int i = 0; i <= levelEnemies; i++)
     {
         enemies.push_back(Enemy(rand() % 800, rand() % 50, rand() % 100, 32, 32, 0));
     }
 
-    for (i = 0; i <= levelLasers; i++)
+    for (int i = 0; i <= levelLasers; i++)
     {
         firedLaser.push_back(Laser(0, 0, 0, 0));
     }
 }
 
-void eraseLaser(int point)
+/*void eraseLaser(int point)
 {
     firedLaser.erase(firedLaser.begin() + point);
     eraseLaser(point);
-}
+}*/
 
 int main(void)
 {
@@ -76,9 +74,25 @@ int main(void)
         
         
         //Logic
+        if (waveCleared == true)
+        {
+            level++;
+            if (level >= 4)
+            {
+                gameOver = true;
+            }
+            
+            else if (level < 4)
+            {
+                levelEnemies = level * 10 * 2;
+                levelLasers = level * 10 * 2;
+                levelUp = 1;
+            }
+        }
 
         frameIndex++;
-        
+        waveCleared = true;
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -120,7 +134,7 @@ int main(void)
 
             for(unsigned long long int i=0; i < enemies.size(); i++)
             {
-                if (enemies[i].y > 0 )
+                if (enemies[i].y > 0 && enemies[i].hit == 0)
                 {
                     enemies[i].y += enemies[i].speed * GetFrameTime();
                 }
@@ -129,11 +143,21 @@ int main(void)
                 {
                     enemies[i].y = 10;               
                 }
+
+                if (levelUp == 1)
+                {
+                    enemies[i].hit = 0;
+                    enemies[i].y = 10;
+                    enemies[i].x = rand() % 800;
+                    enemies[i].speed = rand() % 100;
+                }
                 
                 if (enemies[i].y > 0 && enemies[i].hit == 0)
                 {
                     enemies[i].draw();
+                    waveCleared = false;
                 }
+                //cout << enemies[i].hit;
             }
 
             for (unsigned long long int x=0; x < levelLasers; x++)
@@ -142,15 +166,19 @@ int main(void)
                 {
                     if (CheckCollisionCircleRec(firedLaser[y].center, firedLaser[y].radius, enemies[x].getRect()))
                     {
-                        enemies[i].hit = 1;
+                        enemies[x].hit = 1;
+                        //cout << "ouch for enemy number " << x << "\n";
                     }
 
                     if (CheckCollisionRecs(player.getRect(), enemies[x].getRect()))
                     {
                         gameOver = true;
                     }
+                    //cout << "Collision detected for " << x << " comparing to " << y << "\n";
                 }
-            }  
+            }
+            cout << waveCleared << "\n";
+            levelUp = 0;
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
