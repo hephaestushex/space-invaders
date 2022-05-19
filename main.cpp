@@ -141,7 +141,7 @@ int main(void)
             {
                 enemies[i].hit = 1;
                 enemies[i].y = 10;
-                // cout << "ouch for enemy number " << x << "\n";
+                cout << "ouch for enemy number " << i << "\n";
             }
 
             if (CheckCollisionRecs(player.getRect(), enemies[i].getRect()))
@@ -151,6 +151,7 @@ int main(void)
 
             if (levelUp == 1)
             {
+                cout << "level up\n";
                 enemies[i].hit = 0;
                 enemies[i].y = 10;
                 enemies[i].x = rand() % 800;
