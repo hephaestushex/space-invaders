@@ -60,7 +60,7 @@ int main(void)
             player.x += player.speed * GetFrameTime();
         }
 
-        if (IsKeyReleased(KEY_SPACE))
+        if (IsKeyPressed(KEY_SPACE))
         {
             laser.x = player.x;
             laser.y = player.y;
@@ -82,7 +82,6 @@ int main(void)
             }
         }
 
-        frameIndex++;
         waveCleared = true;
 
         // Draw
@@ -109,12 +108,6 @@ int main(void)
         {
             laser.y = player.y;
             laser.x = player.x;
-        }
-
-        if (frameIndex == 10 && laser.speed == 0)
-        {
-            laser = Laser(player.x, player.y - 16, 300, 8);
-            frameIndex = 0;
         }
 
         if (laser.y > 0)
@@ -161,8 +154,6 @@ int main(void)
             }
             // cout << enemies[i].hit;
         }
-
-        cout << waveCleared << "\n";
         levelUp = 0;
         EndDrawing();
         //----------------------------------------------------------------------------------
