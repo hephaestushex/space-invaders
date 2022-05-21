@@ -132,7 +132,7 @@ int main(void)
             laser.isFired = false;
         }
 
-        if (laser.y > 0 && laser.isFired == true)
+        if (laser.y > 0)
         {
             laser.draw();
         }
