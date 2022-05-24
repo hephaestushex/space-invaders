@@ -16,10 +16,8 @@ Laser laser(0, 0, 0, 0);
 
 vector<Enemy> enemies;
 
-float frameIndex = 1;
 float levelEnemies = 20;
 float level = 1;
-float levelUp = 0;
 
 void setup()
 {
@@ -50,11 +48,13 @@ int main(void)
     setup(); // Setup game variables
     player = Player(GetScreenWidth() / 2, GetScreenHeight() - GetScreenHeight() / 4, 200, 32, 32);
     laser = Laser(player.x, player.y, 300, 8);
+    cout << levelEnemies << "\n";
 
     // Main game loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         // Controls
+        
         if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
         {
             player.x -= player.speed * GetFrameTime();
@@ -83,8 +83,8 @@ int main(void)
             else if (level < 4)
             {
                 levelEnemies = level * 2 * 10;
-                levelUp = 1;
-                cout << "LEvel UP\n";
+                waveCleared = true;
+                cout << levelEnemies << "\n";
             }
         }
 
@@ -99,8 +99,6 @@ int main(void)
                 //cout << "ouch for enemy number " << i << "\n";
             }
         }
-        
-        levelUp = 1;
         //cout << laser.x << " "<< laser.y << "\n";
 
         // Draw
@@ -164,12 +162,11 @@ int main(void)
 
             if (enemies[i].hit == 0)
             {
-                levelUp = 0;
+                waveCleared = true;
             }
 
-            if (levelUp == 1)
+            if (waveCleared == true)
             {
-                cout << "level up\n";
                 enemies[i].hit = 0;
                 enemies[i].y = 10;
                 enemies[i].x = rand() % 800;
@@ -179,11 +176,9 @@ int main(void)
             if (enemies[i].y > 0 && enemies[i].hit != 1)
             {
                 enemies[i].draw();
-                waveCleared = false;
             }
             // cout << enemies[i].hit;
         }
-        levelUp = 0;
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
