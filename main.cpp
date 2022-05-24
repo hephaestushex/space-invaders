@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <time.h>
 #include "raylib.h"
 #include "Player.hpp"
 #include "Laser.hpp"
