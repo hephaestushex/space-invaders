@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <stdlib.h>
 #include <time.h>
 #include "raylib.h"
 #include "Player.hpp"
@@ -28,6 +27,11 @@ void setup()
     {
         enemies.push_back(Enemy(rand() % 800, rand() % 50, rand() % 100, 32, 32, 0));
     }
+}
+
+void clearEnemies()
+{
+    
 }
 
 int main(void)
@@ -78,24 +82,25 @@ int main(void)
 
             else if (level < 4)
             {
-                levelEnemies = level * 10 * 2;
+                levelEnemies = level * 2 * 10;
                 levelUp = 1;
                 cout << "LEvel UP\n";
             }
         }
 
         waveCleared = true;
-
-        for (int i=0; i < levelEnemies; i++)
+        
+        for (unsigned long long int i=0; i < enemies.size(); i++)
         {
-            if (CheckCollisionCircleRec(laser.center, laser.radius, enemies[i].getRect()))
+            if (CheckCollisionCircleRec(Vector2{laser.x, laser.y}, laser.radius, enemies[i].getRect()))
             {
                 enemies[i].hit = 1;
-                enemies[i].y = 10;
-                cout << "ouch for enemy number " << i << "\n";
+
+                //cout << "ouch for enemy number " << i << "\n";
             }
         }
-
+        
+        levelUp = 1;
         //cout << laser.x << " "<< laser.y << "\n";
 
         // Draw
@@ -132,10 +137,12 @@ int main(void)
             laser.isFired = false;
         }
 
-        if (laser.y > 0)
+        /*if (laser.y > 0)
         {
             laser.draw();
-        }
+        }*/
+
+        laser.draw();
         
         for (unsigned long long int i = 0; i < enemies.size(); i++)
         {
@@ -152,7 +159,12 @@ int main(void)
             if (CheckCollisionRecs(player.getRect(), enemies[i].getRect()))
             {
                 gameOver = true;
-                cout << "gameOver\n";
+                //cout << "gameOver\n";
+            }
+
+            if (enemies[i].hit == 0)
+            {
+                levelUp = 0;
             }
 
             if (levelUp == 1)
@@ -164,7 +176,7 @@ int main(void)
                 enemies[i].speed = rand() % 100;
             }
 
-            if (enemies[i].y > 0 && enemies[i].hit == 0)
+            if (enemies[i].y > 0 && enemies[i].hit != 1)
             {
                 enemies[i].draw();
                 waveCleared = false;
@@ -178,5 +190,6 @@ int main(void)
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow(); // Close window and OpenGL context
+    return 0;
     //--------------------------------------------------------------------------------------
 }
